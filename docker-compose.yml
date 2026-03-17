@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: preskool
+      POSTGRES_USER: preskool
+      POSTGRES_PASSWORD: preskool
+    ports:
+      - "5432:5432"
+  backend:
+    build: ./preskool-erp/backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://preskool:preskool@db:5432/preskool
+      SYNC_DATABASE_URL: postgresql+psycopg2://preskool:preskool@db:5432/preskool
+      JWT_SECRET_KEY: changeme
+      CORS_ORIGINS: http://localhost:5173
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  frontend:
+    image: node:20
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    environment:
+      VITE_API_URL: http://localhost:8000/api/v1
+    volumes:
+      - ./preskool-erp/frontend:/app
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
