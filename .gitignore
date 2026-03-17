@@ -5,6 +5,9 @@ __pycache__/
 node_modules/
 dist/
 *.tsbuildinfo
+backend-deploy.zip
+.vercel/
+preskool-erp/frontend/.gitignore
 preskool-erp/backend/preskool.db
 .env
 .DS_Store
